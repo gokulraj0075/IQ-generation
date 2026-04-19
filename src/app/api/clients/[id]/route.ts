@@ -7,10 +7,20 @@ import { auth } from "@/server/better-auth/config"
 
 /* ---------------- GET SINGLE CLIENT ---------------- */
 
-// FIXED: Shows all clients to both Admin and Employee
-export async function GET() {
-  const result = await db.select().from(clients);
-  return NextResponse.json({ clients: result });
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+
+  const { id } = await params
+
+  const result = await db
+    .select()
+    .from(clients)
+    .where(eq(clients.id, id))
+
+  return NextResponse.json(result[0])
+
 }
 
 /* ---------------- UPDATE CLIENT ---------------- */
